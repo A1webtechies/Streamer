@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-
+import { connect } from "react-redux";
+import { signIn, signOut } from "../../actions/index";
 class GoogleAuth extends Component {
-  state = { isSignedIn: null };
   componentDidMount() {
     window.gapi.load("client: auth2", () => {
-      this.auth = window.gapi.client
+      window.gapi.client
         .init({
           clientId:
             "320273903022-90oiuqgmr241v93rd471l1qngv60dgja.apps.googleusercontent.com",
@@ -12,46 +12,50 @@ class GoogleAuth extends Component {
         })
         .then(() => {
           this.auth = window.gapi.auth2.getAuthInstance();
-          this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+          this.onAuthChange(this.auth.isSignedIn.get());
           this.auth.isSignedIn.listen(this.onAuthChange);
         });
     });
   }
 
-  onAuthChange = () => {
-    this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+  onAuthChange = isSignedIn => {
+    if (isSignedIn) {
+      this.props.signIn(this.auth.currentUser.get().getId());
+    } else {
+      this.props.signOut();
+    }
   };
 
   renderAuthBtn = () => {
-    if (this.state.isSignedIn === null) {
+    if (this.props.isSignedIn === null) {
       return <div>Loading....</div>;
-    } else if (this.state.isSignedIn) {
+    } else if (this.props.isSignedIn) {
       return (
         <button
-          onClick={this.onSignOut}
+          onClick={this.onSignOutClick}
           className="waves-effect waves-light btn-small white red-text"
         >
-          <i className="fab fa-google left " style={{ lineHeight: "30px" }}></i>{" "}
+          <i className="fab fa-google left " style={{ lineHeight: "30px" }}></i>
           SignOut
         </button>
       );
     } else {
       return (
         <button
-          onClick={this.onSignIn}
+          onClick={this.onSignInClick}
           className="waves-effect waves-light btn-small white teal-text"
         >
-          <i className="fab fa-google left " style={{ lineHeight: "30px" }}></i>{" "}
+          <i className="fab fa-google left " style={{ lineHeight: "30px" }}></i>
           SignIn
         </button>
       );
     }
   };
 
-  onSignIn = () => {
+  onSignInClick = () => {
     this.auth.signIn();
   };
-  onSignOut = () => {
+  onSignOutClick = () => {
     this.auth.signOut();
   };
   render() {
@@ -59,4 +63,12 @@ class GoogleAuth extends Component {
   }
 }
 
-export default GoogleAuth;
+const mapSateToProps = state => {
+  return {
+    isSignedIn: state.auth.isSignedIn
+  };
+};
+export default connect(
+  mapSateToProps,
+  { signIn, signOut }
+)(GoogleAuth);

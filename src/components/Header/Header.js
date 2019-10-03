@@ -7,10 +7,10 @@ const Header = () => {
   return (
     <div>
       <div className="navbar-fixed">
-        <nav className="teal">
+        <nav className="white">
           <div className="container">
-            <div className="nav-wrapper ">
-              <Link to="/" className="brand-logo ">
+            <div className="nav-wrapper">
+              <Link to="/" className="brand-logo  teal-text">
                 Streamy
               </Link>
               <Link to="#" data-target="mobile-nav" className="sidenav-trigger">
@@ -18,7 +18,9 @@ const Header = () => {
               </Link>
               <ul className="right hide-on-med-and-down">
                 <li>
-                  <Link to="/">All Streams</Link>
+                  <Link to="/" className="black-text">
+                    All Streams
+                  </Link>
                 </li>
                 <li>
                   <GoogleAuth />
