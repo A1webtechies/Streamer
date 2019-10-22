@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { createStream } from "../../../actions";
 class CreateStream extends Component {
   renderErrors = ({ touched, error }) => {
     return touched && error ? (
@@ -19,7 +21,8 @@ class CreateStream extends Component {
     );
   };
   onSubmit = formData => {
-    console.log(formData);
+    this.props.createStream(formData);
+    this.props.history.push("/");
   };
   render() {
     return (
@@ -53,12 +56,17 @@ const validate = formValues => {
   if (!formValues.title || formValues.title.length <= 3) {
     errors.title = "Title must be greater than 3 characters";
   }
-  if (!formValues.description || formValues.description.length <= 3) {
-    errors.description = "Description must be greater than 3 characters";
+  if (!formValues.description || formValues.description.length <= 10) {
+    errors.description = "Description must be greater than 10 characters";
   }
   return errors;
 };
-export default reduxForm({
-  form: "createStream",
-  validate
-})(CreateStream);
+export default connect(
+  null,
+  { createStream }
+)(
+  reduxForm({
+    form: "createStream",
+    validate
+  })(CreateStream)
+);

@@ -13,8 +13,12 @@ const Header = () => {
               <Link to="/" className="brand-logo  teal-text">
                 Streamy
               </Link>
-              <Link to="#" data-target="mobile-nav" className="sidenav-trigger">
-                <i className="material-icons">menu</i>
+              <Link
+                to="#"
+                data-target="mobile-nav"
+                className="sidenav-trigger "
+              >
+                <i className="material-icons teal-text">menu</i>
               </Link>
               <ul className="right hide-on-med-and-down">
                 <li>
